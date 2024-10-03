@@ -40,7 +40,7 @@ typedef struct {
 vector<token> tokenize_json_file(const string& file_name) {
     ifstream file(file_name);
     if (!file) {
-        cout << "Error: Vould not open file '" << file_name << "'" << endl;
+        cout << "Error: Could not open file '" << file_name << "'" << endl;
         exit(1);
     }
     char character;
