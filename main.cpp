@@ -59,6 +59,24 @@ vector<token> tokenize_json_file(const string& file_name) {
                 } else if (isalpha(character)) {
                     state = STATE_WORD;
                     value = character;
+                } else if (character == ',') {
+                    token new_token = {TOKEN_COMMA, string(1, character)};
+                    tokens.push_back(new_token);
+                } else if (character == ':') {
+                    token new_token = {TOKEN_COLUMN, string(1, character)};
+                    tokens.push_back(new_token);
+                } else if (character == '{') {
+                    token new_token = {TOKEN_OBJECT_OPEN, string(1, character)};
+                    tokens.push_back(new_token);
+                } else if (character == '}') {
+                    token new_token = {TOKEN_OBJECT_CLOSE, string(1, character)};
+                    tokens.push_back(new_token);
+                } else if (character == '[') {
+                    token new_token = {TOKEN_ARRAY_OPEN, string(1, character)};
+                    tokens.push_back(new_token);
+                } else if (character == ']') {
+                    token new_token = {TOKEN_ARRAY_CLOSE, string(1, character)};
+                    tokens.push_back(new_token);
                 }
                 break;
             }
