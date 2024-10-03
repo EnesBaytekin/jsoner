@@ -1,14 +1,33 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 
-using std::string,
-      std::cout,
-      std::endl;
+using namespace std;
+
+void show_help() {
+    cout << "Usage:" << endl;
+    cout << "    jsoner <file> <element_path>" << endl;
+}
+
+void read_json_file(string file_name) {
+    ifstream file(file_name);
+    if (!file) {
+        cout << "Error: Vould not open file '" << file_name << "'" << endl;
+        exit(1);
+    }
+    char character;
+    
+    while (file.get(character)) {
+        cout << character;
+    }
+    file.close();
+}
 
 int main(int argc, char* argv[]) {
-    for (int i=0; i<argc; ++i) {
-        cout << argv[i] << " ";
+    if (argc != 3) {
+        show_help();
+        exit(1);
     }
-    cout << endl;
+    read_json_file(argv[1]);
     return 0;
 }

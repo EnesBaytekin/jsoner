@@ -1,0 +1,27 @@
+{
+    "foo": "foobar",
+    "bar": {
+        "baz1": 123,
+        "baz2": 456
+    },
+    "baz": [
+        {
+            "foobar": 0,
+            "barbaz": 1,
+            "bazfoo": 2
+        },
+        {
+            "foobar": 3,
+            "barbaz": 4,
+            "bazfoo": 5
+        },
+        {
+            "foo": [
+                "bar",
+                "baz",
+                4,
+                8
+            ]
+        }
+    ]
+}
