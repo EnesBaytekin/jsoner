@@ -6,9 +6,9 @@
     },
     "baz": [
         {
-            "foobar": 0,
-            "barbaz": 1,
-            "bazfoo": 2
+            "foobar": true,
+            "barbaz": false,
+            "bazfoo": null
         },
         {
             "foobar": 3.7,

@@ -56,6 +56,9 @@ vector<token> tokenize_json_file(const string& file_name) {
                 } else if (isdigit(character) || character == '-') {
                     state = STATE_NUMBER;
                     value = character;
+                } else if (isalpha(character)) {
+                    state = STATE_WORD;
+                    value = character;
                 }
                 break;
             }
@@ -83,7 +86,20 @@ vector<token> tokenize_json_file(const string& file_name) {
                 break;
             }
             case STATE_WORD: {
-
+                if (isalpha(character) || character == '.') {
+                    value += character;
+                } else {
+                    token new_token;
+                    if      (value == "true")  new_token = {TOKEN_TRUE,  value};
+                    else if (value == "false") new_token = {TOKEN_FALSE, value};
+                    else if (value == "null")  new_token = {TOKEN_NULL,  value};
+                    else {
+                        cerr << "Error: undefined word: '" << value << "'" << endl;
+                    }
+                    state = STATE_NORMAL;
+                    tokens.push_back(new_token);
+                    file.unget();
+                }
                 break;
             }
         }
