@@ -2,7 +2,7 @@
     "foo": "foobar",
     "bar": {
         "baz1": 123,
-        "baz2": 456
+        "baz2": -456
     },
     "baz": [
         {
@@ -11,9 +11,9 @@
             "bazfoo": 2
         },
         {
-            "foobar": 3,
-            "barbaz": 4,
-            "bazfoo": 5
+            "foobar": 3.7,
+            "barbaz": -4.63,
+            "bazfoo": -565.010005
         },
         {
             "foo": [
