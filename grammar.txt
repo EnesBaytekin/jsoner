@@ -1,0 +1,22 @@
+json
+  : element
+
+elements
+  : 
+  | element, elements
+
+element
+  : STRING
+  | NUMBER
+  | TRUE
+  | FALSE
+  | NULL
+  | { members }
+  | [ elements ]
+
+members
+  : 
+  | member , members
+
+member
+  : string : element
