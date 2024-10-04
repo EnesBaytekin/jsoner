@@ -3,7 +3,7 @@ json
 
 elements
   : 
-  | element, elements
+  | element , elements
 
 element
   : STRING
