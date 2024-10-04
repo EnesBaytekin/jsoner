@@ -1,8 +1,30 @@
 #include <iostream>
 #include "tokenizer.hpp"
 #include "utils.hpp"
+#include "parser.hpp"
 
 using namespace std;
+
+void print_tokens(const vector<Token>& tokens) {
+    for (Token _token : tokens) {
+        cout << "<";
+        switch (_token.type) {
+            case TokenType::TOKEN_STRING:       cout << "STRING";       break;
+            case TokenType::TOKEN_NUMBER:       cout << "NUMBER";       break;
+            case TokenType::TOKEN_TRUE:         cout << "TRUE";         break;
+            case TokenType::TOKEN_FALSE:        cout << "FALSE";        break;
+            case TokenType::TOKEN_NULL:         cout << "NULL";         break;
+            case TokenType::TOKEN_OBJECT_OPEN:  cout << "OBJECT_OPEN";  break;
+            case TokenType::TOKEN_OBJECT_CLOSE: cout << "OBJECT_CLOSE"; break;
+            case TokenType::TOKEN_ARRAY_OPEN:   cout << "ARRAY_OPEN";   break;
+            case TokenType::TOKEN_ARRAY_CLOSE:  cout << "ARRAY_CLOSE";  break;
+            case TokenType::TOKEN_COLUMN:       cout << "COLUMN";       break;
+            case TokenType::TOKEN_COMMA:        cout << "COMMA";        break;
+        }
+        cout << ": '" << _token.value << "'> ";
+    }
+    cout << endl;
+}
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {
@@ -10,22 +32,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     vector<Token> tokens = tokenize_json_file(argv[1]);
-    for (Token t : tokens) {
-        cout << "<";
-        switch (t.type) {
-            case 0:  cout << "STRING";           break;
-            case 1:  cout << "NUMBER";           break;
-            case 2:  cout << "TRUE";             break;
-            case 3:  cout << "FALSE";            break;
-            case 4:  cout << "NULL";             break;
-            case 5:  cout << "OBJECT_OPEN";      break;
-            case 6:  cout << "OBJECT_CLOSE";     break;
-            case 7:  cout << "ARRAY_OPEN";       break;
-            case 8:  cout << "ARRAY_CLOSE";      break;
-            case 9:  cout << "COLUMN";           break;
-            case 10: cout << "COMMA";            break;
-        }
-        cout << ": " << t.value << "> ";
-    }
+    print_tokens(tokens);
+    Parser parser = Parser(tokens);
+    Node* parse_tree = parser.parse_json();
+    cout << "Parsed successfuly" << endl;
+    parser.print_tree(parse_tree, "");
+    cout << "Printed successfuly" << endl;
     return 0;
 }

@@ -4,14 +4,14 @@
 #include <string>
 #include <vector>
 
-typedef enum {
+enum class TokenizerState {
     STATE_NORMAL,
     STATE_STRING,
     STATE_NUMBER,
     STATE_WORD,
-} tokenizer_state;
+};
 
-typedef enum {
+enum class TokenType {
     TOKEN_STRING,
     TOKEN_NUMBER,
     TOKEN_TRUE,
@@ -23,7 +23,7 @@ typedef enum {
     TOKEN_ARRAY_CLOSE,
     TOKEN_COLUMN,
     TOKEN_COMMA,
-} TokenType;
+};
 
 struct Token {
     TokenType type;
