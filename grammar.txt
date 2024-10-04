@@ -2,7 +2,7 @@ json
   : element
 
 elements
-  : 
+  : element
   | element , elements
 
 element
@@ -12,11 +12,13 @@ element
   | FALSE
   | NULL
   | { members }
+  | { }
   | [ elements ]
+  | [ ]
 
 members
-  : 
+  : member
   | member , members
 
 member
-  : string : element
+  : STRING : element
