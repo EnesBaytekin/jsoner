@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-std::vector<token> tokenize_json_file(const std::string& file_name) {
+std::vector<Token> tokenize_json_file(const std::string& file_name) {
     std::ifstream file(file_name);
     if (!file) {
         utils::show_error("Error: Could not open file '"+file_name+"'");
@@ -12,7 +12,7 @@ std::vector<token> tokenize_json_file(const std::string& file_name) {
     char character;
     tokenizer_state state = STATE_NORMAL;
     std::string value;
-    std::vector<token> tokens;
+    std::vector<Token> tokens;
     while (file.get(character)) {
         switch (state) {
             case STATE_NORMAL: {
@@ -26,22 +26,22 @@ std::vector<token> tokenize_json_file(const std::string& file_name) {
                     state = STATE_WORD;
                     value = character;
                 } else if (character == ',') {
-                    token new_token = {TOKEN_COMMA, std::string(1, character)};
+                    Token new_token = {TOKEN_COMMA, std::string(1, character)};
                     tokens.push_back(new_token);
                 } else if (character == ':') {
-                    token new_token = {TOKEN_COLUMN, std::string(1, character)};
+                    Token new_token = {TOKEN_COLUMN, std::string(1, character)};
                     tokens.push_back(new_token);
                 } else if (character == '{') {
-                    token new_token = {TOKEN_OBJECT_OPEN, std::string(1, character)};
+                    Token new_token = {TOKEN_OBJECT_OPEN, std::string(1, character)};
                     tokens.push_back(new_token);
                 } else if (character == '}') {
-                    token new_token = {TOKEN_OBJECT_CLOSE, std::string(1, character)};
+                    Token new_token = {TOKEN_OBJECT_CLOSE, std::string(1, character)};
                     tokens.push_back(new_token);
                 } else if (character == '[') {
-                    token new_token = {TOKEN_ARRAY_OPEN, std::string(1, character)};
+                    Token new_token = {TOKEN_ARRAY_OPEN, std::string(1, character)};
                     tokens.push_back(new_token);
                 } else if (character == ']') {
-                    token new_token = {TOKEN_ARRAY_CLOSE, std::string(1, character)};
+                    Token new_token = {TOKEN_ARRAY_CLOSE, std::string(1, character)};
                     tokens.push_back(new_token);
                 }
                 break;
@@ -49,7 +49,7 @@ std::vector<token> tokenize_json_file(const std::string& file_name) {
             case STATE_STRING: {
                 if (character == '"') {
                     state = STATE_NORMAL;
-                    token new_token = {TOKEN_STRING, value};
+                    Token new_token = {TOKEN_STRING, value};
                     tokens.push_back(new_token);
                     break;
                 } else {
@@ -63,7 +63,7 @@ std::vector<token> tokenize_json_file(const std::string& file_name) {
                     value += character;
                 } else {
                     state = STATE_NORMAL;
-                    token new_token = {TOKEN_NUMBER, value};
+                    Token new_token = {TOKEN_NUMBER, value};
                     tokens.push_back(new_token);
                     file.unget();
                 }
@@ -73,7 +73,7 @@ std::vector<token> tokenize_json_file(const std::string& file_name) {
                 if (isalpha(character) || character == '.') {
                     value += character;
                 } else {
-                    token new_token;
+                    Token new_token;
                     if      (value == "true")  new_token = {TOKEN_TRUE,  value};
                     else if (value == "false") new_token = {TOKEN_FALSE, value};
                     else if (value == "null")  new_token = {TOKEN_NULL,  value};

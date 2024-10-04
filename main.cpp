@@ -9,8 +9,8 @@ int main(int argc, char* argv[]) {
         utils::show_help();
         return 1;
     }
-    vector<token> tokens = tokenize_json_file(argv[1]);
-    for (token t : tokens) {
+    vector<Token> tokens = tokenize_json_file(argv[1]);
+    for (Token t : tokens) {
         cout << "<";
         switch (t.type) {
             case 0:  cout << "STRING";           break;

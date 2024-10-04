@@ -23,13 +23,13 @@ typedef enum {
     TOKEN_ARRAY_CLOSE,
     TOKEN_COLUMN,
     TOKEN_COMMA,
-} token_type;
+} TokenType;
 
-typedef struct {
-    token_type type;
+struct Token {
+    TokenType type;
     std::string value;
-} token;
+};
 
-std::vector<token> tokenize_json_file(const std::string& file_name);
+std::vector<Token> tokenize_json_file(const std::string& file_name);
 
 #endif
