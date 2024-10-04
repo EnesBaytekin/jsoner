@@ -46,10 +46,8 @@ Parser::Parser(const std::vector<Token>& _tokens) : tokens(_tokens) {
 }
 
 Node* Parser::match(const TokenType& token_type) {
-    debug("matching... "+get_token_type_str(tokens[index].type)+" == "+get_token_type_str(token_type));
     if (index < tokens.size()
     && tokens[index].type == token_type) {
-        debug(" . matched <"+get_token_type_str(tokens[index].type)+": '"+tokens[index].value+"'>, index: "+std::to_string(index+1));
         return new Node(tokens[index++]);
     }
     return nullptr;
@@ -161,14 +159,14 @@ Node* Parser::parse_members() {
     int checkpoint = index;
     if (Node* comma = match(TokenType::TOKEN_COMMA)) {
     if (Node* members = parse_members()) {
-        Node* node = new Node(NodeType::ELEMENT);
+        Node* node = new Node(NodeType::MEMBERS);
         std::get<std::vector<Node*>>(node->children).push_back(member);
         std::get<std::vector<Node*>>(node->children).push_back(comma);
         std::get<std::vector<Node*>>(node->children).push_back(members);
         return node;
     }}
     index = checkpoint;
-    Node* node = new Node(NodeType::ELEMENT);
+    Node* node = new Node(NodeType::MEMBERS);
     std::get<std::vector<Node*>>(node->children).push_back(member);
     return node;
     }
@@ -180,7 +178,7 @@ Node* Parser::parse_member() {
     if (Node* string = match(TokenType::TOKEN_STRING)) {
     if (Node* column = match(TokenType::TOKEN_COLUMN)) {
     if (Node* element = parse_element()) {
-        Node* node = new Node(NodeType::ELEMENT);
+        Node* node = new Node(NodeType::MEMBER);
         std::get<std::vector<Node*>>(node->children).push_back(string);
         std::get<std::vector<Node*>>(node->children).push_back(column);
         std::get<std::vector<Node*>>(node->children).push_back(element);
@@ -201,7 +199,7 @@ void Parser::print_tree(Node* node, std::string indent) {
         std::cout << ", children: [" << std::endl;
         std::vector<Node*> children = std::get<std::vector<Node*>>(node->children);
         for (const auto& child : children) {
-            print_tree(child, indent+"  ");
+            print_tree(child, indent+". ");
             std::cout;
         }
         std::cout << indent << "]}" << std::endl;

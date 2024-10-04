@@ -32,11 +32,8 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     vector<Token> tokens = tokenize_json_file(argv[1]);
-    print_tokens(tokens);
     Parser parser = Parser(tokens);
     Node* parse_tree = parser.parse_json();
-    cout << "Parsed successfuly" << endl;
     parser.print_tree(parse_tree, "");
-    cout << "Printed successfuly" << endl;
     return 0;
 }
