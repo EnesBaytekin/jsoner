@@ -1,135 +1,13 @@
 #include <iostream>
-#include <string>
-#include <fstream>
-#include <vector>
-#include <cctype>
+#include "tokenizer.hpp"
+#include "utils.hpp"
 
 using namespace std;
 
-void show_help() {
-    cout << "Usage:" << endl;
-    cout << "    jsoner <file> <element_path>" << endl;
-}
-
-typedef enum {
-    STATE_NORMAL,
-    STATE_STRING,
-    STATE_NUMBER,
-    STATE_WORD,
-} tokenizer_state;
-
-typedef enum {
-    TOKEN_STRING,
-    TOKEN_NUMBER,
-    TOKEN_TRUE,
-    TOKEN_FALSE,
-    TOKEN_NULL,
-    TOKEN_OBJECT_OPEN,
-    TOKEN_OBJECT_CLOSE,
-    TOKEN_ARRAY_OPEN,
-    TOKEN_ARRAY_CLOSE,
-    TOKEN_COLUMN,
-    TOKEN_COMMA,
-} token_type;
-
-typedef struct {
-    token_type type;
-    string value;
-} token;
-
-vector<token> tokenize_json_file(const string& file_name) {
-    ifstream file(file_name);
-    if (!file) {
-        cout << "Error: Could not open file '" << file_name << "'" << endl;
-        exit(1);
-    }
-    char character;
-    tokenizer_state state = STATE_NORMAL;
-    string value;
-    vector<token> tokens;
-    while (file.get(character)) {
-        switch (state) {
-            case STATE_NORMAL: {
-                if (character == '"') {
-                    state = STATE_STRING;
-                    value = "";
-                } else if (isdigit(character) || character == '-') {
-                    state = STATE_NUMBER;
-                    value = character;
-                } else if (isalpha(character)) {
-                    state = STATE_WORD;
-                    value = character;
-                } else if (character == ',') {
-                    token new_token = {TOKEN_COMMA, string(1, character)};
-                    tokens.push_back(new_token);
-                } else if (character == ':') {
-                    token new_token = {TOKEN_COLUMN, string(1, character)};
-                    tokens.push_back(new_token);
-                } else if (character == '{') {
-                    token new_token = {TOKEN_OBJECT_OPEN, string(1, character)};
-                    tokens.push_back(new_token);
-                } else if (character == '}') {
-                    token new_token = {TOKEN_OBJECT_CLOSE, string(1, character)};
-                    tokens.push_back(new_token);
-                } else if (character == '[') {
-                    token new_token = {TOKEN_ARRAY_OPEN, string(1, character)};
-                    tokens.push_back(new_token);
-                } else if (character == ']') {
-                    token new_token = {TOKEN_ARRAY_CLOSE, string(1, character)};
-                    tokens.push_back(new_token);
-                }
-                break;
-            }
-            case STATE_STRING: {
-                if (character == '"') {
-                    state = STATE_NORMAL;
-                    token new_token = {TOKEN_STRING, value};
-                    tokens.push_back(new_token);
-                    break;
-                } else {
-                    value += character;
-                    break;
-                }
-                break;
-            }
-            case STATE_NUMBER: {
-                if (isdigit(character) || character == '.') {
-                    value += character;
-                } else {
-                    state = STATE_NORMAL;
-                    token new_token = {TOKEN_NUMBER, value};
-                    tokens.push_back(new_token);
-                    file.unget();
-                }
-                break;
-            }
-            case STATE_WORD: {
-                if (isalpha(character) || character == '.') {
-                    value += character;
-                } else {
-                    token new_token;
-                    if      (value == "true")  new_token = {TOKEN_TRUE,  value};
-                    else if (value == "false") new_token = {TOKEN_FALSE, value};
-                    else if (value == "null")  new_token = {TOKEN_NULL,  value};
-                    else {
-                        cerr << "Error: undefined word: '" << value << "'" << endl;
-                    }
-                    state = STATE_NORMAL;
-                    tokens.push_back(new_token);
-                    file.unget();
-                }
-                break;
-            }
-        }
-    }
-    file.close();
-    return tokens;
-}
-
 int main(int argc, char* argv[]) {
     if (argc != 3) {
-        show_help();
-        exit(1);
+        utils::show_help();
+        return 1;
     }
     vector<token> tokens = tokenize_json_file(argv[1]);
     for (token t : tokens) {
