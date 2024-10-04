@@ -33,7 +33,8 @@ public:
     Node* parse_element();
     Node* parse_members();
     Node* parse_member();
-    void print_tree(Node* node, std::string indent);
+    void print_tree(Node* node, const std::string& indent);
+    void create_json(Node* node, std::string& json);
 };
 
 #endif

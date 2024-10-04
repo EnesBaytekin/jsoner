@@ -188,7 +188,7 @@ Node* Parser::parse_member() {
     return nullptr;
 }
 
-void Parser::print_tree(Node* node, std::string indent) {
+void Parser::print_tree(Node* node, const std::string& indent) {
     if (!node) return;
     std::cout << indent << "{type: " << get_node_type_str(node->type);
     if (node->type == NodeType::TOKEN) {
@@ -197,11 +197,23 @@ void Parser::print_tree(Node* node, std::string indent) {
         std::cout << get_token_type_str(token.type) << "]}" << std::endl;
     } else {
         std::cout << ", children: [" << std::endl;
-        std::vector<Node*> children = std::get<std::vector<Node*>>(node->children);
+        std::vector<Node*>& children = std::get<std::vector<Node*>>(node->children);
         for (const auto& child : children) {
             print_tree(child, indent+". ");
-            std::cout;
         }
         std::cout << indent << "]}" << std::endl;
+    }
+}
+
+void Parser::create_json(Node* node, std::string& json) {
+    if (!node) return;
+    if (node->type == NodeType::TOKEN) {
+        Token token = std::get<Token>(node->children);
+        json += token.value;
+    } else {
+        std::vector<Node*>& children = std::get<std::vector<Node*>>(node->children);
+        for (const auto& child : children) {
+            create_json(child, json);
+        }
     }
 }
